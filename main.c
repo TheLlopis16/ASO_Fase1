@@ -121,9 +121,9 @@ static void __exit raspberry_exit(void){
     free_irq(irqNumberBlueON, NULL);   
     free_irq(irqNumberBlueOFF, NULL);      
     free_irq(irqNumberRedON, NULL);   
-    free_irq(irqNumberRedOFF, NULL);     
-
-	gpio_unexport(gpioBlueButtonON);
+    free_irq(irqNumberRedOFF, NULL);
+    
+    gpio_unexport(gpioBlueButtonON);
     gpio_unexport(gpioBlueButtonOFF);
     gpio_unexport(gpioRedButtonON);
     gpio_unexport(gpioRedButtonOFF);
