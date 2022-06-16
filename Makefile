@@ -5,6 +5,6 @@ all:
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) clean
 install:
-	insmod main.ko
+	sudo insmod main.ko
 uninstall:
-	rmmod main.ko
+	sudo rmmod main.ko
