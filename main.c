@@ -6,19 +6,23 @@
 
 MODULE_LICENSE("GPL");
 
+//LEDs
 static unsigned int gpioBlueLED = 16;
 static unsigned int gpioRedLED = 20;
 
+//Buttons
 static unsigned int gpioBlueButtonON = 13;
 static unsigned int gpioBlueButtonOFF = 19;
 static unsigned int gpioRedButtonON = 21;
 static unsigned int gpioRedButtonOFF = 26;
 
+//Interrupts
 static unsigned int irqNumberBlueON;
 static unsigned int irqNumberBlueOFF;
 static unsigned int irqNumberRedON;
 static unsigned int irqNumberRedOFF;  
 
+//Counters
 static unsigned int counterBlueButtonON = 0;
 static unsigned int counterBlueButtonOFF = 0;
 static unsigned int counterRedButtonON = 0;
@@ -57,11 +61,11 @@ static int __init raspberry_init(void){
     int result = 0;
 
     //Init LEDs (Starts OFF)
-	gpio_request(gpioBlueLED, "sysfs");
+    gpio_request(gpioBlueLED, "sysfs");
     gpio_direction_output(gpioBlueLED, false);
     gpio_export(gpioBlueLED, false);
-
-	gpio_request(gpioBlueButtonON, "sysfs");
+    
+    gpio_request(gpioBlueButtonON, "sysfs");
     gpio_direction_input(gpioBlueButtonON);
     gpio_set_debounce(gpioBlueButtonON, 200);
     gpio_export(gpioBlueButtonON, false);
@@ -75,8 +79,8 @@ static int __init raspberry_init(void){
     gpio_request(gpioRedLED, "sysfs");
     gpio_direction_output(gpioRedLED, false);
     gpio_export(gpioRedLED, false);
-
-	gpio_request(gpioRedButtonON, "sysfs");
+    
+    gpio_request(gpioRedButtonON, "sysfs");
     gpio_direction_input(gpioRedButtonON);
     gpio_set_debounce(gpioRedButtonON, 200);
     gpio_export(gpioRedButtonON, false);
@@ -109,12 +113,12 @@ static void __exit raspberry_exit(void){
     printk(KERN_INFO "ASO: The button D (Red OFF) was pressed %d times\n", counterRedButtonOFF);
     
     gpio_set_value(gpioBlueLED, 0);              
-	gpio_unexport(gpioBlueLED);    
+    gpio_unexport(gpioBlueLED);    
 
     gpio_set_value(gpioRedLED, 0);              
-	gpio_unexport(gpioRedLED);   
-
-	free_irq(irqNumberBlueON, NULL);   
+    gpio_unexport(gpioRedLED);   
+    
+    free_irq(irqNumberBlueON, NULL);   
     free_irq(irqNumberBlueOFF, NULL);      
     free_irq(irqNumberRedON, NULL);   
     free_irq(irqNumberRedOFF, NULL);     
@@ -123,10 +127,10 @@ static void __exit raspberry_exit(void){
     gpio_unexport(gpioBlueButtonOFF);
     gpio_unexport(gpioRedButtonON);
     gpio_unexport(gpioRedButtonOFF);
-
-	gpio_free(gpioBlueLED);
+    
+    gpio_free(gpioBlueLED);
     gpio_free(gpioRedLED);
-	gpio_free(gpioBlueButtonON); 
+    gpio_free(gpioBlueButtonON); 
     gpio_free(gpioBlueButtonOFF); 
     gpio_free(gpioRedButtonON); 
     gpio_free(gpioRedButtonOFF); 
