@@ -34,24 +34,28 @@ static irq_handler_t LED_RedON(unsigned int irq, void *dev_id, struct pt_regs *r
 static irq_handler_t LED_RedOFF(unsigned int irq, void *dev_id, struct pt_regs *regs);
 
 static irq_handler_t LED_BlueON(unsigned int irq, void *dev_id, struct pt_regs *regs){
+    printk(KERN_INFO "Button A (Blue ON) pressed!\n");
     counterBlueButtonON++;
     gpio_set_value(gpioBlueLED, true);          
     return (irq_handler_t) IRQ_HANDLED;      
 }
 
 static irq_handler_t LED_BlueOFF(unsigned int irq, void *dev_id, struct pt_regs *regs){
+    printk(KERN_INFO "Button B (Blue OFF) pressed!\n");
     counterBlueButtonOFF++;
     gpio_set_value(gpioBlueLED, false);          
     return (irq_handler_t) IRQ_HANDLED;      
 }
 
 static irq_handler_t LED_RedON(unsigned int irq, void *dev_id, struct pt_regs *regs){
+    printk(KERN_INFO "Button C (Red ON) pressed!\n");
     counterRedButtonON++;
     gpio_set_value(gpioRedLED, true);          
     return (irq_handler_t) IRQ_HANDLED;      
 }
 
 static irq_handler_t LED_RedOFF(unsigned int irq, void *dev_id, struct pt_regs *regs){
+    printk(KERN_INFO "Button D (Red ON) pressed!\n");
     counterRedButtonOFF++;
     gpio_set_value(gpioRedLED, false);          
     return (irq_handler_t) IRQ_HANDLED;      
@@ -59,6 +63,8 @@ static irq_handler_t LED_RedOFF(unsigned int irq, void *dev_id, struct pt_regs *
 
 static int __init raspberry_init(void){
     int result = 0;
+    
+    printk(KERN_INFO "STARTING\n");
 
     //Init LEDs (Starts OFF)
     gpio_request(gpioBlueLED, "sysfs");
@@ -69,6 +75,8 @@ static int __init raspberry_init(void){
     gpio_direction_input(gpioBlueButtonON);
     gpio_set_debounce(gpioBlueButtonON, 200);
     gpio_export(gpioBlueButtonON, false);
+    
+    printk(KERN_INFO "LEDs initialized\n");
 
     //Init Buttons
     gpio_request(gpioBlueButtonOFF, "sysfs");
@@ -89,6 +97,8 @@ static int __init raspberry_init(void){
     gpio_direction_input(gpioRedButtonOFF);
     gpio_set_debounce(gpioRedButtonOFF, 200);
     gpio_export(gpioRedButtonOFF, false);
+    
+    printk(KERN_INFO "Buttons initialized\n");
 
     //Interrupts
     irqNumberBlueON = gpio_to_irq(gpioBlueButtonON);
@@ -107,10 +117,10 @@ static int __init raspberry_init(void){
 static void __exit raspberry_exit(void){
 
     //Show number of clicks for each button
-    printk(KERN_INFO "ASO: The button A (Blue ON) was pressed %d times\n", counterBlueButtonON);
-    printk(KERN_INFO "ASO: The button B (Blue OFF) was pressed %d times\n", counterBlueButtonOFF);
-    printk(KERN_INFO "ASO: The button C (Red ON) was pressed %d times\n", counterRedButtonON);
-    printk(KERN_INFO "ASO: The button D (Red OFF) was pressed %d times\n", counterRedButtonOFF);
+    printk(KERN_INFO "The button A (Blue ON) was pressed %d times\n", counterBlueButtonON);
+    printk(KERN_INFO "The button B (Blue OFF) was pressed %d times\n", counterBlueButtonOFF);
+    printk(KERN_INFO "The button C (Red ON) was pressed %d times\n", counterRedButtonON);
+    printk(KERN_INFO "The button D (Red OFF) was pressed %d times\n", counterRedButtonOFF);
     
     gpio_set_value(gpioBlueLED, 0);              
     gpio_unexport(gpioBlueLED);    
@@ -134,6 +144,8 @@ static void __exit raspberry_exit(void){
     gpio_free(gpioBlueButtonOFF); 
     gpio_free(gpioRedButtonON); 
     gpio_free(gpioRedButtonOFF); 
+
+    printk(KERN_INFO "ENDING\n");
 }
 
 module_init(raspberry_init);
